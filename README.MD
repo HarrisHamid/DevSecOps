@@ -1,6 +1,7 @@
 # March Madness Metrics 🏀
 
-A cloud-based analytics platform providing college basketball insights for fans and analysts during March Madness season.
+A cloud-based analytics platform providing college basketball insights for fans
+and analysts during March Madness season.
 
 ## Team Members
 
@@ -62,6 +63,7 @@ npm install
 # Add a .env file in the frontend directory with:
 # VITE_SUPABASE_URL=your_supabase_project_url
 # VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY=your_supabase_key
+# DATABASE=your_supabase_database_key
 
 # Start dev server
 npm run dev

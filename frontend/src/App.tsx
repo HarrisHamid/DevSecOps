@@ -3,9 +3,34 @@ import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
 import './App.css'
+import { supabase } from './lib/supabase'
 
 function App() {
   const [count, setCount] = useState(0)
+  const [prismaTestResult, setPrismaTestResult] = useState<string>('')
+  const [prismaTestLoading, setPrismaTestLoading] = useState(false)
+
+  async function testPrismaUsers() {
+    setPrismaTestLoading(true)
+    setPrismaTestResult('')
+    try {
+      const { data, error } = await supabase.from("users").upsert({
+        username: "user123",
+        password: "password123",
+        email: "user123@gmail.com" 
+      }).select();
+      
+      if (error) {
+        throw new Error(error.message);
+      }
+      setPrismaTestResult(JSON.stringify(data));
+      
+    } catch (e) {
+      setPrismaTestResult(e instanceof Error ? e.message : String(e))
+    } finally {
+      setPrismaTestLoading(false)
+    }
+  }
 
   return (
     <>
@@ -27,6 +52,31 @@ function App() {
         >
           Count is {count}
         </button>
+
+        <button
+          className="counter"
+          onClick={testPrismaUsers}
+          disabled={prismaTestLoading}
+        >
+          {prismaTestLoading ? 'Testing Prisma…' : 'Test Prisma (users table)'}
+        </button>
+
+        {prismaTestResult ? (
+          <pre
+            style={{
+              marginTop: 12,
+              maxWidth: 720,
+              textAlign: 'left',
+              whiteSpace: 'pre-wrap',
+              wordBreak: 'break-word',
+              background: 'rgba(0,0,0,0.4)',
+              padding: 12,
+              borderRadius: 8,
+            }}
+          >
+            {prismaTestResult}
+          </pre>
+        ) : null}
       </section>
 
       <div className="ticks"></div>
