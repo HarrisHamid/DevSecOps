@@ -3,7 +3,6 @@ import { supabase } from './lib/supabase'
 import type { User } from '@supabase/supabase-js'
 import './App.css'
 
-
 export default function App() {
   const [count, setCount] = useState(0)
   const [prismaTestResult, setPrismaTestResult] = useState<string>('')
@@ -13,80 +12,82 @@ export default function App() {
     setPrismaTestLoading(true)
     setPrismaTestResult('')
     try {
-      const { data, error } = await supabase.from("users").upsert({
-        username: "user123",
-        password: "password123",
-        email: "user123@gmail.com" 
-      }).select();
-      
+      const { data, error } = await supabase
+        .from('users')
+        .upsert({
+          username: 'user123',
+          password: 'password123',
+          email: 'user123@gmail.com',
+        })
+        .select()
+
       if (error) {
-        throw new Error(error.message);
+        throw new Error(error.message)
       }
-      setPrismaTestResult(JSON.stringify(data));
-      
+      setPrismaTestResult(JSON.stringify(data))
     } catch (e) {
       setPrismaTestResult(e instanceof Error ? e.message : String(e))
     } finally {
       setPrismaTestLoading(false)
     }
   }
-const tickerItems = [
-  'DUKE 87 — KANSAS 74',
-  'GONZAGA 91 — ARIZONA 88 OT',
-  'HOUSTON 76 — TENNESSEE 69',
-  'PURDUE 83 — IOWA ST 71',
-  'UCONN 95 — SAN DIEGO ST 80',
-  'ALABAMA 102 — CLEMSON 90',
-  'DUKE 87 — KANSAS 74',
-  'GONZAGA 91 — ARIZONA 88 OT',
-  'HOUSTON 76 — TENNESSEE 69',
-  'PURDUE 83 — IOWA ST 71',
-  'UCONN 95 — SAN DIEGO ST 80',
-  'ALABAMA 102 — CLEMSON 90',
-]
+  const tickerItems = [
+    'DUKE 87 — KANSAS 74',
+    'GONZAGA 91 — ARIZONA 88 OT',
+    'HOUSTON 76 — TENNESSEE 69',
+    'PURDUE 83 — IOWA ST 71',
+    'UCONN 95 — SAN DIEGO ST 80',
+    'ALABAMA 102 — CLEMSON 90',
+    'DUKE 87 — KANSAS 74',
+    'GONZAGA 91 — ARIZONA 88 OT',
+    'HOUSTON 76 — TENNESSEE 69',
+    'PURDUE 83 — IOWA ST 71',
+    'UCONN 95 — SAN DIEGO ST 80',
+    'ALABAMA 102 — CLEMSON 90',
+  ]
 
-const stats = [
-  { label: 'Teams Tracked', value: '364', delta: '+12 this week', type: '' },
-  { label: 'Live Games', value: '14', delta: '● broadcasting', type: 'up' },
-  { label: 'Pts/Game Leader', value: '31.2', delta: 'Cooper Flagg', type: 'hot' },
-  { label: 'Model Accuracy', value: '87%', delta: '↑ 2.4% vs last yr', type: 'up' },
-]
+  const stats = [
+    { label: 'Teams Tracked', value: '364', delta: '+12 this week', type: '' },
+    { label: 'Live Games', value: '14', delta: '● broadcasting', type: 'up' },
+    { label: 'Pts/Game Leader', value: '31.2', delta: 'Cooper Flagg', type: 'hot' },
+    { label: 'Model Accuracy', value: '87%', delta: '↑ 2.4% vs last yr', type: 'up' },
+  ]
 
-const features = [
-  {
-    icon: '📡',
-    title: 'Real-Time Data',
-    desc: 'Live score ingestion with sub-second latency. Every possession, every stat update — streamed directly to your dashboard.',
-    tag: 'Powered by Supabase Realtime',
-  },
-  {
-    icon: '📊',
-    title: 'Deep Analytics',
-    desc: 'Offensive rating, defensive efficiency, pace, true shooting %. The metrics that actually predict tournament outcomes.',
-    tag: 'Advanced Metrics',
-  },
-  {
-    icon: '🏆',
-    title: 'Bracket Intelligence',
-    desc: 'Seed matchup analytics and historical upset patterns so you stop picking your alma mater to win the whole thing.',
-    tag: 'ML-Assisted',
-  },
-]
+  const features = [
+    {
+      icon: '📡',
+      title: 'Real-Time Data',
+      desc: 'Live score ingestion with sub-second latency. Every possession, every stat update — streamed directly to your dashboard.',
+      tag: 'Powered by Supabase Realtime',
+    },
+    {
+      icon: '📊',
+      title: 'Deep Analytics',
+      desc: 'Offensive rating, defensive efficiency, pace, true shooting %. The metrics that actually predict tournament outcomes.',
+      tag: 'Advanced Metrics',
+    },
+    {
+      icon: '🏆',
+      title: 'Bracket Intelligence',
+      desc: 'Seed matchup analytics and historical upset patterns so you stop picking your alma mater to win the whole thing.',
+      tag: 'ML-Assisted',
+    },
+  ]
 
-const marqueeItems = [
-  { num: '68', label: 'Tournament Teams' },
-  { num: '63', label: 'Games Played' },
-  { num: '2.4M', label: 'Data Points' },
-  { num: '99.9%', label: 'Uptime SLA' },
-  { num: '364', label: 'Teams Indexed' },
-  { num: '<50ms', label: 'Avg Latency' },
-  { num: '68', label: 'Tournament Teams' },
-  { num: '63', label: 'Games Played' },
-  { num: '2.4M', label: 'Data Points' },
-  { num: '99.9%', label: 'Uptime SLA' },
-  { num: '364', label: 'Teams Indexed' },
-  { num: '<50ms', label: 'Avg Latency' },
-]
+  const marqueeItems = [
+    { num: '68', label: 'Tournament Teams' },
+    { num: '63', label: 'Games Played' },
+    { num: '2.4M', label: 'Data Points' },
+    { num: '99.9%', label: 'Uptime SLA' },
+    { num: '364', label: 'Teams Indexed' },
+    { num: '<50ms', label: 'Avg Latency' },
+    { num: '68', label: 'Tournament Teams' },
+    { num: '63', label: 'Games Played' },
+    { num: '2.4M', label: 'Data Points' },
+    { num: '99.9%', label: 'Uptime SLA' },
+    { num: '364', label: 'Teams Indexed' },
+    { num: '<50ms', label: 'Avg Latency' },
+  ]
 
   const [user, setUser] = useState<User | null>(null)
 
@@ -155,18 +156,11 @@ const marqueeItems = [
             <button className="btn-ghost">Explore Teams</button>
           </div>
         </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
+        <button className="counter" onClick={() => setCount((count) => count + 1)}>
           Count is {count}
         </button>
 
-        <button
-          className="counter"
-          onClick={testPrismaUsers}
-          disabled={prismaTestLoading}
-        >
+        <button className="counter" onClick={testPrismaUsers} disabled={prismaTestLoading}>
           {prismaTestLoading ? 'Testing Prisma…' : 'Test Prisma (users table)'}
         </button>
 
@@ -188,23 +182,23 @@ const marqueeItems = [
         ) : null}
       </section>
 
-        <div className="hero-right">
-          <div className="terminal">
-            <div className="terminal-body">
-              {stats.map((s) => (
-                <div key={s.label} className="stat-cell">
-                  <span className="stat-label">{s.label}</span>
-                  <span className={`stat-value ${s.type}`}>{s.value}</span>
-                  <span className="stat-delta">{s.delta}</span>
-                </div>
-              ))}
-            </div>
-            <div className="terminal-footer">
-              <span>SRC: NCAA / CBS SPORTS</span>
-              <span>UPDATED 0.4s AGO</span>
-            </div>
+      <div className="hero-right">
+        <div className="terminal">
+          <div className="terminal-body">
+            {stats.map((s) => (
+              <div key={s.label} className="stat-cell">
+                <span className="stat-label">{s.label}</span>
+                <span className={`stat-value ${s.type}`}>{s.value}</span>
+                <span className="stat-delta">{s.delta}</span>
+              </div>
+            ))}
+          </div>
+          <div className="terminal-footer">
+            <span>SRC: NCAA / CBS SPORTS</span>
+            <span>UPDATED 0.4s AGO</span>
           </div>
         </div>
+      </div>
 
       {/* MARQUEE */}
       <div className="stats-marquee">
