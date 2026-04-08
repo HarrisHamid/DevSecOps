@@ -59,9 +59,9 @@ A cloud-based analytics platform providing college basketball insights for fans 
 cd frontend
 npm install
 
-# Configure environment
-cp .env.example .env
-# Fill in VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY in .env
+# Add a .env file in the frontend directory with:
+# VITE_SUPABASE_URL=your_supabase_project_url
+# VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY=your_supabase_key
 
 # Start dev server
 npm run dev
