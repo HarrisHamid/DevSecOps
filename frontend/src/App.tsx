@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react'
 import { supabase } from './lib/supabase'
 import type { User } from '@supabase/supabase-js'
 import './App.css'
-import { supabase } from './lib/supabase'
 
-function App() {
+
+export default function App() {
   const [count, setCount] = useState(0)
   const [prismaTestResult, setPrismaTestResult] = useState<string>('')
   const [prismaTestLoading, setPrismaTestLoading] = useState(false)
@@ -88,7 +88,6 @@ const marqueeItems = [
   { num: '<50ms', label: 'Avg Latency' },
 ]
 
-export default function App() {
   const [user, setUser] = useState<User | null>(null)
 
   useEffect(() => {
@@ -206,7 +205,6 @@ export default function App() {
             </div>
           </div>
         </div>
-      </section>
 
       {/* MARQUEE */}
       <div className="stats-marquee">
