@@ -7,8 +7,8 @@
 }
 
 :root {
-  --orange: #FF5C00;
-  --green: #00FF85;
+  --orange: #ff5c00;
+  --green: #00ff85;
   --bg: #080808;
   --surface: #111111;
   --surface2: #161616;
@@ -139,8 +139,12 @@ nav {
 }
 
 @keyframes ticker {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 /* HERO */
@@ -207,8 +211,13 @@ nav {
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
 }
 
 .hero-title {
@@ -254,7 +263,9 @@ nav {
   transition: opacity 0.2s;
 }
 
-.btn-primary:hover { opacity: 0.85; }
+.btn-primary:hover {
+  opacity: 0.85;
+}
 
 .btn-ghost {
   background: transparent;
@@ -335,8 +346,12 @@ nav {
   line-height: 1;
 }
 
-.stat-value.up { color: var(--green); }
-.stat-value.hot { color: var(--orange); }
+.stat-value.up {
+  color: var(--green);
+}
+.stat-value.hot {
+  color: var(--orange);
+}
 
 .stat-delta {
   font-size: 0.6rem;
@@ -441,7 +456,7 @@ nav {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--green);
-  border: 1px solid rgba(0,255,133,0.2);
+  border: 1px solid rgba(0, 255, 133, 0.2);
   padding: 0.2rem 0.5rem;
 }
 
@@ -485,8 +500,12 @@ nav {
 }
 
 @keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 /* FOOTER */
@@ -504,7 +523,9 @@ footer {
   color: var(--muted);
 }
 
-.footer-logo span { color: var(--orange); }
+.footer-logo span {
+  color: var(--orange);
+}
 
 .footer-copy {
   font-size: 0.65rem;
@@ -524,7 +545,9 @@ footer {
   .features-grid {
     grid-template-columns: 1fr;
   }
-  .nav-links { display: none; }
+  .nav-links {
+    display: none;
+  }
   footer {
     padding: 2rem;
     flex-direction: column;

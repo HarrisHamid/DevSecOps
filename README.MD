@@ -42,8 +42,26 @@ A cloud-based analytics platform providing college basketball insights for fans 
 
 - **AWS** - Cloud infrastructure (EC2)
 - **Docker** - Containerization
-- **GitHub Actions** - CI/CD automation
+- **GitHub Actions** - CI/CD pipeline
 - **CloudWatch** - Monitoring and logging
+
+## CI/CD
+
+GitHub Actions runs on every push to a branch and on pull requests targeting `main`.
+
+| Check | Tool | Command |
+|---|---|---|
+| Formatting | Prettier | `npm run format:check` |
+| Linting | ESLint | `npm run lint` |
+
+Run checks locally before pushing:
+
+```bash
+cd frontend
+npm run format:check   # check formatting
+npm run format         # auto-fix formatting
+npm run lint           # check for lint errors
+```
 
 ## Getting Started
 

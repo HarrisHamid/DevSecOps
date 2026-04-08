@@ -4,10 +4,18 @@ import type { User } from '@supabase/supabase-js'
 import './App.css'
 
 const tickerItems = [
-  'DUKE 87 — KANSAS 74', 'GONZAGA 91 — ARIZONA 88 OT', 'HOUSTON 76 — TENNESSEE 69',
-  'PURDUE 83 — IOWA ST 71', 'UCONN 95 — SAN DIEGO ST 80', 'ALABAMA 102 — CLEMSON 90',
-  'DUKE 87 — KANSAS 74', 'GONZAGA 91 — ARIZONA 88 OT', 'HOUSTON 76 — TENNESSEE 69',
-  'PURDUE 83 — IOWA ST 71', 'UCONN 95 — SAN DIEGO ST 80', 'ALABAMA 102 — CLEMSON 90',
+  'DUKE 87 — KANSAS 74',
+  'GONZAGA 91 — ARIZONA 88 OT',
+  'HOUSTON 76 — TENNESSEE 69',
+  'PURDUE 83 — IOWA ST 71',
+  'UCONN 95 — SAN DIEGO ST 80',
+  'ALABAMA 102 — CLEMSON 90',
+  'DUKE 87 — KANSAS 74',
+  'GONZAGA 91 — ARIZONA 88 OT',
+  'HOUSTON 76 — TENNESSEE 69',
+  'PURDUE 83 — IOWA ST 71',
+  'UCONN 95 — SAN DIEGO ST 80',
+  'ALABAMA 102 — CLEMSON 90',
 ]
 
 const stats = [
@@ -58,7 +66,9 @@ export default function App() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setUser(data.session?.user ?? null))
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null)
     })
     return () => subscription.unsubscribe()
@@ -68,12 +78,22 @@ export default function App() {
     <>
       {/* NAV */}
       <nav>
-        <div className="nav-logo">M<span>3</span></div>
+        <div className="nav-logo">
+          M<span>3</span>
+        </div>
         <ul className="nav-links">
-          <li><a href="#features">Features</a></li>
-          <li><a href="#stats">Stats</a></li>
-          <li><a href="#bracket">Bracket</a></li>
-          <li><a href="#about">About</a></li>
+          <li>
+            <a href="#features">Features</a>
+          </li>
+          <li>
+            <a href="#stats">Stats</a>
+          </li>
+          <li>
+            <a href="#bracket">Bracket</a>
+          </li>
+          <li>
+            <a href="#about">About</a>
+          </li>
         </ul>
         <button className="nav-cta">{user ? 'Log In →' : 'Sign Up →'}</button>
       </nav>
@@ -82,7 +102,9 @@ export default function App() {
       <div className="ticker">
         <div className="ticker-track">
           {tickerItems.map((item, i) => (
-            <span key={i} className="ticker-item">{item}</span>
+            <span key={i} className="ticker-item">
+              {item}
+            </span>
           ))}
         </div>
       </div>
@@ -99,9 +121,8 @@ export default function App() {
             Metrics.
           </h1>
           <p className="hero-sub">
-            The analytics platform college basketball deserved all along.
-            Real-time stats, bracket intelligence, and team insights —
-            all in one terminal.
+            The analytics platform college basketball deserved all along. Real-time stats, bracket
+            intelligence, and team insights — all in one terminal.
           </p>
           <div className="hero-actions">
             <button className="btn-primary">View Dashboard →</button>
@@ -143,7 +164,11 @@ export default function App() {
       {/* FEATURES */}
       <section className="features" id="features">
         <p className="section-label">// core platform</p>
-        <h2 className="section-title">Built Different.<br />For the Data-Obsessed.</h2>
+        <h2 className="section-title">
+          Built Different.
+          <br />
+          For the Data-Obsessed.
+        </h2>
         <div className="features-grid">
           {features.map((f) => (
             <div key={f.title} className="feature-card">
@@ -158,7 +183,9 @@ export default function App() {
 
       {/* FOOTER */}
       <footer>
-        <div className="footer-logo">M<span>3</span> — March Madness Metrics</div>
+        <div className="footer-logo">
+          M<span>3</span> — March Madness Metrics
+        </div>
         <p className="footer-copy">SSW 590-WS · Stevens Institute of Technology · 2025</p>
       </footer>
     </>
