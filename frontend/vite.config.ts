@@ -7,9 +7,10 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
     proxy: {
-      '/api': {
-        target: 'http://localhost:8787', // Doesnt' exist
+      '/ncaa': {
+        target: 'https://ncaa-api.henrygd.me',
         changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/ncaa/, ''),
       },
     },
   },
