@@ -1,12 +1,18 @@
 import { useEffect, useState } from 'react'
 import { supabase } from './lib/supabase'
 import type { User } from '@supabase/supabase-js'
+import { ncaaApi } from './services/ncaaApi.ts'
+import { useNcaaData } from './hooks/useNcaaData.ts'
 import './App.css'
 
 export default function App() {
   const [count, setCount] = useState(0)
   const [prismaTestResult, setPrismaTestResult] = useState<string>('')
   const [prismaTestLoading, setPrismaTestLoading] = useState(false)
+
+  // NCAA API data
+  const { data: scoreboardData } = useNcaaData(ncaaApi.getScoreboard)
+  const { data: bracketData } = useNcaaData(ncaaApi.getBracket)
 
   async function testPrismaUsers() {
     setPrismaTestLoading(true)
@@ -31,13 +37,9 @@ export default function App() {
       setPrismaTestLoading(false)
     }
   }
-  const tickerItems = [
-    'DUKE 87 — KANSAS 74',
-    'GONZAGA 91 — ARIZONA 88 OT',
-    'HOUSTON 76 — TENNESSEE 69',
-    'PURDUE 83 — IOWA ST 71',
-    'UCONN 95 — SAN DIEGO ST 80',
-    'ALABAMA 102 — CLEMSON 90',
+
+  // Build ticker from real API data, fallback to hardcoded if loading
+  const fallbackTickerItems = [
     'DUKE 87 — KANSAS 74',
     'GONZAGA 91 — ARIZONA 88 OT',
     'HOUSTON 76 — TENNESSEE 69',
@@ -46,10 +48,32 @@ export default function App() {
     'ALABAMA 102 — CLEMSON 90',
   ]
 
+  const liveTickerItems: string[] =
+    scoreboardData?.games?.map((game: any) => {
+      const home = game.home?.names?.short ?? 'HOME'
+      const away = game.away?.names?.short ?? 'AWAY'
+      const homeScore = game.home?.score ?? ''
+      const awayScore = game.away?.score ?? ''
+      const status = game.gameState === 'live' ? ' 🔴' : ''
+      return `${home} ${homeScore} — ${away} ${awayScore}${status}`
+    }) ?? fallbackTickerItems
+
+  const tickerItems = [...liveTickerItems, ...liveTickerItems]
+
+  const liveGameCount =
+    scoreboardData?.games?.filter((g: any) => g.gameState === 'live').length ?? 14
+
+  const topScorer = bracketData?.regions?.[0]?.games?.[0]?.home?.names?.short ?? 'Cooper Flagg'
+
   const stats = [
     { label: 'Teams Tracked', value: '364', delta: '+12 this week', type: '' },
-    { label: 'Live Games', value: '14', delta: '● broadcasting', type: 'up' },
-    { label: 'Pts/Game Leader', value: '31.2', delta: 'Cooper Flagg', type: 'hot' },
+    {
+      label: 'Live Games',
+      value: String(liveGameCount),
+      delta: '● broadcasting',
+      type: 'up',
+    },
+    { label: 'Pts/Game Leader', value: '31.2', delta: topScorer, type: 'hot' },
     { label: 'Model Accuracy', value: '87%', delta: '↑ 2.4% vs last yr', type: 'up' },
   ]
 
@@ -141,7 +165,9 @@ export default function App() {
         <div className="hero-grid-bg" />
 
         <div className="hero-left">
-          <div className="hero-badge">● Live Season Data</div>
+          <div className="hero-badge">
+            {scoreboardData ? '● Live NCAA Data' : '● Live Season Data'}
+          </div>
           <h1 className="hero-title">
             March
             <span className="accent">Madness</span>
@@ -194,8 +220,8 @@ export default function App() {
             ))}
           </div>
           <div className="terminal-footer">
-            <span>SRC: NCAA / CBS SPORTS</span>
-            <span>UPDATED 0.4s AGO</span>
+            <span>SRC: NCAA API</span>
+            <span>{scoreboardData ? 'LIVE DATA' : 'UPDATED 0.4s AGO'}</span>
           </div>
         </div>
       </div>
@@ -231,6 +257,23 @@ export default function App() {
           ))}
         </div>
       </section>
+
+      {/* BRACKET */}
+      <section id="bracket" style={{ padding: '60px 40px', maxWidth: '700px', margin: '0 auto' }}>
+        <p className="section-label">// 2026 tournament</p>
+        <h2 className="section-title">Bracket Results.</h2>
+        {bracketData?.championships?.[0]?.games?.map((game: any) => {
+          const top = game.teams.find((t: any) => t.isTop)
+          const bot = game.teams.find((t: any) => !t.isTop)
+          return (
+          <div key={game.contestId} style={{ padding: '8px 0', borderBottom: '1px solid rgba(255,255,255,0.07)', fontSize: '14px' }}>
+            <span style={{ color: top?.isWinner ? '#fff' : 'rgba(255,255,255,0.4)' }}>{top?.nameShort} {top?.score}</span>
+            <span style={{ color: 'rgba(255,255,255,0.3)', margin: '0 8px' }}>vs</span>
+            <span style={{ color: bot?.isWinner ? '#fff' : 'rgba(255,255,255,0.4)' }}>{bot?.nameShort} {bot?.score}</span>
+            </div>
+            )
+            })}
+            </section>
 
       {/* FOOTER */}
       <footer>
