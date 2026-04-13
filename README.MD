@@ -50,10 +50,10 @@ and analysts during March Madness season.
 
 GitHub Actions runs on every push to a branch and on pull requests targeting `main`.
 
-| Check | Tool | Command |
-|---|---|---|
+| Check      | Tool     | Command                |
+| ---------- | -------- | ---------------------- |
 | Formatting | Prettier | `npm run format:check` |
-| Linting | ESLint | `npm run lint` |
+| Linting    | ESLint   | `npm run lint`         |
 
 Run checks locally before pushing:
 

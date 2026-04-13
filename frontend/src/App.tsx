@@ -276,14 +276,25 @@ export default function App() {
           const top = game.teams.find((t: any) => t.isTop)
           const bot = game.teams.find((t: any) => !t.isTop)
           return (
-          <div key={game.contestId} style={{ padding: '8px 0', borderBottom: '1px solid rgba(255,255,255,0.07)', fontSize: '14px' }}>
-            <span style={{ color: top?.isWinner ? '#fff' : 'rgba(255,255,255,0.4)' }}>{top?.nameShort} {top?.score}</span>
-            <span style={{ color: 'rgba(255,255,255,0.3)', margin: '0 8px' }}>vs</span>
-            <span style={{ color: bot?.isWinner ? '#fff' : 'rgba(255,255,255,0.4)' }}>{bot?.nameShort} {bot?.score}</span>
+            <div
+              key={game.contestId}
+              style={{
+                padding: '8px 0',
+                borderBottom: '1px solid rgba(255,255,255,0.07)',
+                fontSize: '14px',
+              }}
+            >
+              <span style={{ color: top?.isWinner ? '#fff' : 'rgba(255,255,255,0.4)' }}>
+                {top?.nameShort} {top?.score}
+              </span>
+              <span style={{ color: 'rgba(255,255,255,0.3)', margin: '0 8px' }}>vs</span>
+              <span style={{ color: bot?.isWinner ? '#fff' : 'rgba(255,255,255,0.4)' }}>
+                {bot?.nameShort} {bot?.score}
+              </span>
             </div>
-            )
-            })}
-            </section>
+          )
+        })}
+      </section>
 
       {/* FOOTER */}
       <footer>
