@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react'
 import { supabase } from './lib/supabase'
 import type { User } from '@supabase/supabase-js'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { ncaaApi } from './services/ncaaApi.ts'
 import { useNcaaData } from './hooks/useNcaaData.ts'
+import TeamsPage from './TeamsPage.tsx'
 import './App.css'
 
 export default function App() {
+  const location = useLocation()
+  const navigate = useNavigate()
   const [count, setCount] = useState(0)
   const [prismaTestResult, setPrismaTestResult] = useState<string>('')
   const [prismaTestLoading, setPrismaTestLoading] = useState(false)
@@ -125,6 +129,10 @@ export default function App() {
     return () => subscription.unsubscribe()
   }, [])
 
+  if (location.pathname === '/teams') {
+    return <TeamsPage bracketData={bracketData} />
+  }
+
   return (
     <>
       {/* NAV */}
@@ -179,7 +187,9 @@ export default function App() {
           </p>
           <div className="hero-actions">
             <button className="btn-primary">View Dashboard →</button>
-            <button className="btn-ghost">Explore Teams</button>
+            <button className="btn-ghost" onClick={() => navigate('/teams')}>
+              Explore Teams
+            </button>
           </div>
         </div>
         <button className="counter" onClick={() => setCount((count) => count + 1)}>

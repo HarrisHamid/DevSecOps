@@ -555,3 +555,68 @@ footer {
     text-align: center;
   }
 }
+
+.teams-page {
+  min-height: 100vh;
+  padding: 7rem 2rem 3rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.teams-page-header h1 {
+  font-family: var(--display);
+  letter-spacing: 0.03em;
+  font-size: clamp(2.5rem, 4vw, 4rem);
+}
+
+.teams-page-header p {
+  margin-top: 0.5rem;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.teams-actions {
+  margin: 1.5rem 0;
+}
+
+.teams-back-link {
+  text-decoration: none;
+  display: inline-block;
+}
+
+.teams-empty {
+  color: var(--muted);
+  margin-top: 1rem;
+}
+
+.teams-table-wrapper {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.teams-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.teams-table th,
+.teams-table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+.teams-table th {
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: var(--surface2);
+}
+
+.teams-table tr:last-child td {
+  border-bottom: none;
+}
