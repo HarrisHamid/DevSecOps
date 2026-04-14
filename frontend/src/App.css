@@ -620,3 +620,111 @@ footer {
 .teams-table tr:last-child td {
   border-bottom: none;
 }
+
+.dashboard-page {
+  min-height: 100vh;
+  padding: 7rem 2rem 3rem;
+}
+
+.dashboard-header {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dashboard-header h1 {
+  font-family: var(--display);
+  letter-spacing: 0.03em;
+  font-size: clamp(2.2rem, 4vw, 4rem);
+}
+
+.dashboard-header p {
+  margin-top: 0.5rem;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.dashboard-actions {
+  max-width: 1200px;
+  margin: 1.5rem auto;
+}
+
+.bracket-board {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(180px, 1fr));
+  align-items: start;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.bracket-round-column {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  padding: 0.8rem;
+  height: fit-content;
+}
+
+.bracket-round-column h2 {
+  font-family: var(--display);
+  font-size: 1.3rem;
+  letter-spacing: 0.04em;
+}
+
+.bracket-round-column > span {
+  display: block;
+  margin: 0.2rem 0 0.9rem;
+  color: var(--muted);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.bracket-game-card {
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  padding: 0.65rem;
+  margin-bottom: 0.65rem;
+}
+
+.bracket-game-title {
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.45rem;
+}
+
+.bracket-team-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.25rem;
+}
+
+.team-name {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.team-name.winner {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.team-score {
+  font-family: var(--display);
+  font-size: 1.2rem;
+  line-height: 1;
+  color: var(--orange);
+}
+
+@media (max-width: 1100px) {
+  .bracket-board {
+    grid-template-columns: repeat(7, minmax(200px, 1fr));
+  }
+}

@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { ncaaApi } from './services/ncaaApi.ts'
 import { useNcaaData } from './hooks/useNcaaData.ts'
 import TeamsPage from './TeamsPage.tsx'
+import DashboardPage from './DashboardPage.tsx'
 import './App.css'
 
 export default function App() {
@@ -133,6 +134,10 @@ export default function App() {
     return <TeamsPage bracketData={bracketData} />
   }
 
+  if (location.pathname === '/dashboard') {
+    return <DashboardPage bracketData={bracketData} />
+  }
+
   return (
     <>
       {/* NAV */}
@@ -186,7 +191,9 @@ export default function App() {
             intelligence, and team insights — all in one terminal.
           </p>
           <div className="hero-actions">
-            <button className="btn-primary">View Dashboard →</button>
+            <button className="btn-primary" onClick={() => navigate('/dashboard')}>
+              View Dashboard →
+            </button>
             <button className="btn-ghost" onClick={() => navigate('/teams')}>
               Explore Teams
             </button>
