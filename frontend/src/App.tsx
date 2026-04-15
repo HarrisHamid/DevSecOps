@@ -9,6 +9,56 @@ import DashboardPage from './DashboardPage.tsx'
 import TeamPage from './TeamPage.tsx'
 import './App.css'
 
+type NcaaNames = {
+  short?: string
+}
+
+type NcaaTeamSide = {
+  names?: NcaaNames
+  score?: number | string
+}
+
+type ScoreboardGame = {
+  home?: NcaaTeamSide
+  away?: NcaaTeamSide
+  gameState?: string
+}
+
+type ScoreboardData = {
+  games?: ScoreboardGame[]
+}
+
+type BracketRegionGame = {
+  home?: {
+    names?: NcaaNames
+  }
+}
+
+type BracketRegion = {
+  games?: BracketRegionGame[]
+}
+
+type BracketChampionshipTeam = {
+  isTop: boolean
+  isWinner?: boolean
+  nameShort?: string
+  score?: number | string
+}
+
+type BracketChampionshipGame = {
+  contestId: number | string
+  teams: BracketChampionshipTeam[]
+}
+
+type BracketChampionship = {
+  games?: BracketChampionshipGame[]
+}
+
+type BracketData = {
+  regions?: BracketRegion[]
+  championships?: BracketChampionship[]
+}
+
 export default function App() {
   const location = useLocation()
   const navigate = useNavigate()
@@ -54,8 +104,11 @@ export default function App() {
     'ALABAMA 102 — CLEMSON 90',
   ]
 
+  const typedScoreboardData = scoreboardData as ScoreboardData | undefined
+  const typedBracketData = bracketData as BracketData | undefined
+
   const liveTickerItems: string[] =
-    scoreboardData?.games?.map((game: any) => {
+    typedScoreboardData?.games?.map((game: ScoreboardGame) => {
       const home = game.home?.names?.short ?? 'HOME'
       const away = game.away?.names?.short ?? 'AWAY'
       const homeScore = game.home?.score ?? ''
@@ -67,9 +120,9 @@ export default function App() {
   const tickerItems = [...liveTickerItems, ...liveTickerItems]
 
   const liveGameCount =
-    scoreboardData?.games?.filter((g: any) => g.gameState === 'live').length ?? 14
+    typedScoreboardData?.games?.filter((g: ScoreboardGame) => g.gameState === 'live').length ?? 14
 
-  const topScorer = bracketData?.regions?.[0]?.games?.[0]?.home?.names?.short ?? 'Cooper Flagg'
+  const topScorer = typedBracketData?.regions?.[0]?.games?.[0]?.home?.names?.short ?? 'Cooper Flagg'
 
   const stats = [
     { label: 'Teams Tracked', value: '364', delta: '+12 this week', type: '' },
@@ -279,34 +332,6 @@ export default function App() {
             </div>
           ))}
         </div>
-      </section>
-
-      {/* BRACKET */}
-      <section id="bracket" style={{ padding: '60px 40px', maxWidth: '700px', margin: '0 auto' }}>
-        <p className="section-label">// 2026 tournament</p>
-        <h2 className="section-title">Bracket Results.</h2>
-        {bracketData?.championships?.[0]?.games?.map((game: any) => {
-          const top = game.teams.find((t: any) => t.isTop)
-          const bot = game.teams.find((t: any) => !t.isTop)
-          return (
-            <div
-              key={game.contestId}
-              style={{
-                padding: '8px 0',
-                borderBottom: '1px solid rgba(255,255,255,0.07)',
-                fontSize: '14px',
-              }}
-            >
-              <span style={{ color: top?.isWinner ? '#fff' : 'rgba(255,255,255,0.4)' }}>
-                {top?.nameShort} {top?.score}
-              </span>
-              <span style={{ color: 'rgba(255,255,255,0.3)', margin: '0 8px' }}>vs</span>
-              <span style={{ color: bot?.isWinner ? '#fff' : 'rgba(255,255,255,0.4)' }}>
-                {bot?.nameShort} {bot?.score}
-              </span>
-            </div>
-          )
-        })}
       </section>
 
       {/* FOOTER */}
