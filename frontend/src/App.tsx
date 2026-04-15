@@ -1,12 +1,74 @@
 import { useEffect, useState } from 'react'
 import { supabase } from './lib/supabase'
 import type { User } from '@supabase/supabase-js'
+import { matchPath, useLocation, useNavigate } from 'react-router-dom'
+import { ncaaApi } from './services/ncaaApi.ts'
+import { useNcaaData } from './hooks/useNcaaData.ts'
+import TeamsPage from './TeamsPage.tsx'
+import DashboardPage from './DashboardPage.tsx'
+import TeamPage from './TeamPage.tsx'
 import './App.css'
 
+type NcaaNames = {
+  short?: string
+}
+
+type NcaaTeamSide = {
+  names?: NcaaNames
+  score?: number | string
+}
+
+type ScoreboardGame = {
+  home?: NcaaTeamSide
+  away?: NcaaTeamSide
+  gameState?: string
+}
+
+type ScoreboardData = {
+  games?: ScoreboardGame[]
+}
+
+type BracketRegionGame = {
+  home?: {
+    names?: NcaaNames
+  }
+}
+
+type BracketRegion = {
+  games?: BracketRegionGame[]
+}
+
+type BracketChampionshipTeam = {
+  isTop: boolean
+  isWinner?: boolean
+  nameShort?: string
+  score?: number | string
+}
+
+type BracketChampionshipGame = {
+  contestId: number | string
+  teams: BracketChampionshipTeam[]
+}
+
+type BracketChampionship = {
+  games?: BracketChampionshipGame[]
+}
+
+type BracketData = {
+  regions?: BracketRegion[]
+  championships?: BracketChampionship[]
+}
+
 export default function App() {
+  const location = useLocation()
+  const navigate = useNavigate()
   const [count, setCount] = useState(0)
   const [prismaTestResult, setPrismaTestResult] = useState<string>('')
   const [prismaTestLoading, setPrismaTestLoading] = useState(false)
+
+  // NCAA API data
+  const { data: scoreboardData } = useNcaaData(ncaaApi.getScoreboard)
+  const { data: bracketData } = useNcaaData(ncaaApi.getBracket)
 
   async function testPrismaUsers() {
     setPrismaTestLoading(true)
@@ -31,13 +93,9 @@ export default function App() {
       setPrismaTestLoading(false)
     }
   }
-  const tickerItems = [
-    'DUKE 87 — KANSAS 74',
-    'GONZAGA 91 — ARIZONA 88 OT',
-    'HOUSTON 76 — TENNESSEE 69',
-    'PURDUE 83 — IOWA ST 71',
-    'UCONN 95 — SAN DIEGO ST 80',
-    'ALABAMA 102 — CLEMSON 90',
+
+  // Build ticker from real API data, fallback to hardcoded if loading
+  const fallbackTickerItems = [
     'DUKE 87 — KANSAS 74',
     'GONZAGA 91 — ARIZONA 88 OT',
     'HOUSTON 76 — TENNESSEE 69',
@@ -46,10 +104,35 @@ export default function App() {
     'ALABAMA 102 — CLEMSON 90',
   ]
 
+  const typedScoreboardData = scoreboardData as ScoreboardData | undefined
+  const typedBracketData = bracketData as BracketData | undefined
+
+  const liveTickerItems: string[] =
+    typedScoreboardData?.games?.map((game: ScoreboardGame) => {
+      const home = game.home?.names?.short ?? 'HOME'
+      const away = game.away?.names?.short ?? 'AWAY'
+      const homeScore = game.home?.score ?? ''
+      const awayScore = game.away?.score ?? ''
+      const status = game.gameState === 'live' ? ' 🔴' : ''
+      return `${home} ${homeScore} — ${away} ${awayScore}${status}`
+    }) ?? fallbackTickerItems
+
+  const tickerItems = [...liveTickerItems, ...liveTickerItems]
+
+  const liveGameCount =
+    typedScoreboardData?.games?.filter((g: ScoreboardGame) => g.gameState === 'live').length ?? 14
+
+  const topScorer = typedBracketData?.regions?.[0]?.games?.[0]?.home?.names?.short ?? 'Cooper Flagg'
+
   const stats = [
     { label: 'Teams Tracked', value: '364', delta: '+12 this week', type: '' },
-    { label: 'Live Games', value: '14', delta: '● broadcasting', type: 'up' },
-    { label: 'Pts/Game Leader', value: '31.2', delta: 'Cooper Flagg', type: 'hot' },
+    {
+      label: 'Live Games',
+      value: String(liveGameCount),
+      delta: '● broadcasting',
+      type: 'up',
+    },
+    { label: 'Pts/Game Leader', value: '31.2', delta: topScorer, type: 'hot' },
     { label: 'Model Accuracy', value: '87%', delta: '↑ 2.4% vs last yr', type: 'up' },
   ]
 
@@ -101,6 +184,19 @@ export default function App() {
     return () => subscription.unsubscribe()
   }, [])
 
+  const teamMatch = matchPath({ path: '/teams/:team', end: true }, location.pathname)
+  if (teamMatch?.params?.team) {
+    return <TeamPage team={decodeURIComponent(teamMatch.params.team)} />
+  }
+
+  if (location.pathname === '/teams') {
+    return <TeamsPage bracketData={bracketData} />
+  }
+
+  if (location.pathname === '/dashboard') {
+    return <DashboardPage bracketData={bracketData} />
+  }
+
   return (
     <>
       {/* NAV */}
@@ -141,7 +237,9 @@ export default function App() {
         <div className="hero-grid-bg" />
 
         <div className="hero-left">
-          <div className="hero-badge">● Live Season Data</div>
+          <div className="hero-badge">
+            {scoreboardData ? '● Live NCAA Data' : '● Live Season Data'}
+          </div>
           <h1 className="hero-title">
             March
             <span className="accent">Madness</span>
@@ -152,8 +250,12 @@ export default function App() {
             intelligence, and team insights — all in one terminal.
           </p>
           <div className="hero-actions">
-            <button className="btn-primary">View Dashboard →</button>
-            <button className="btn-ghost">Explore Teams</button>
+            <button className="btn-primary" onClick={() => navigate('/dashboard')}>
+              View Dashboard →
+            </button>
+            <button className="btn-ghost" onClick={() => navigate('/teams')}>
+              Explore Teams
+            </button>
           </div>
         </div>
         <button className="counter" onClick={() => setCount((count) => count + 1)}>
@@ -194,8 +296,8 @@ export default function App() {
             ))}
           </div>
           <div className="terminal-footer">
-            <span>SRC: NCAA / CBS SPORTS</span>
-            <span>UPDATED 0.4s AGO</span>
+            <span>SRC: NCAA API</span>
+            <span>{scoreboardData ? 'LIVE DATA' : 'UPDATED 0.4s AGO'}</span>
           </div>
         </div>
       </div>
