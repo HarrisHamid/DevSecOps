@@ -597,6 +597,30 @@ footer {
   overflow: hidden;
 }
 
+.team-page .teams-table-wrapper {
+  max-height: 70vh;
+  overflow: auto;
+}
+
+.team-page .teams-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.team-page .teams-table th:first-child,
+.team-page .teams-table td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: var(--surface);
+}
+
+.team-page .teams-table thead th:first-child {
+  z-index: 3;
+  background: var(--surface2);
+}
+
 .teams-table {
   width: 100%;
   border-collapse: collapse;
@@ -721,6 +745,11 @@ footer {
   font-size: 1.2rem;
   line-height: 1;
   color: var(--orange);
+}
+
+.team-link:hover {
+  background-color: #3d3d3d; /* Change to your preferred color */
+  cursor: pointer;
 }
 
 @media (max-width: 1100px) {

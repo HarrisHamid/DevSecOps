@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import { supabase } from './lib/supabase'
 import type { User } from '@supabase/supabase-js'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { matchPath, useLocation, useNavigate } from 'react-router-dom'
 import { ncaaApi } from './services/ncaaApi.ts'
 import { useNcaaData } from './hooks/useNcaaData.ts'
 import TeamsPage from './TeamsPage.tsx'
 import DashboardPage from './DashboardPage.tsx'
+import TeamPage from './TeamPage.tsx'
 import './App.css'
 
 export default function App() {
@@ -129,6 +130,11 @@ export default function App() {
     })
     return () => subscription.unsubscribe()
   }, [])
+
+  const teamMatch = matchPath({ path: '/teams/:team', end: true }, location.pathname)
+  if (teamMatch?.params?.team) {
+    return <TeamPage team={decodeURIComponent(teamMatch.params.team)} />
+  }
 
   if (location.pathname === '/teams') {
     return <TeamsPage bracketData={bracketData} />
