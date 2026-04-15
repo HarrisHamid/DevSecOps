@@ -71,8 +71,10 @@ export default function TeamsPage({ bracketData }: { bracketData: unknown }) {
             <tbody>
               {teams.map((team) => (
                 <tr key={team.name}>
-                  <td >
-                    <Link to={`/teams/${encodeURIComponent(team.name)}`} className='team-link'>{team.name}</Link>
+                  <td>
+                    <Link to={`/teams/${encodeURIComponent(team.name)}`} className="team-link">
+                      {team.name}
+                    </Link>
                   </td>
                   <td>{team.avgScore}</td>
                 </tr>

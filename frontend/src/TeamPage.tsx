@@ -36,7 +36,7 @@ export default function TeamPage({ team }: { team: string }) {
       'Season_STL',
       'Season_BLK',
     ],
-    [],
+    []
   )
 
   useEffect(() => {
@@ -95,7 +95,7 @@ export default function TeamPage({ team }: { team: string }) {
 
   return (
     <main className="team-page">
-      <h1 className='hero-title'>{team}</h1>
+      <h1 className="hero-title">{team}</h1>
       {error ? <p className="teams-empty">{error}</p> : null}
       {loading ? <p className="teams-empty">Loading players…</p> : null}
 
@@ -124,4 +124,3 @@ export default function TeamPage({ team }: { team: string }) {
     </main>
   )
 }
-

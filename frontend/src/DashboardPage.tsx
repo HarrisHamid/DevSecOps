@@ -37,7 +37,8 @@ function getRoundNumber(game: Game) {
 
 export default function DashboardPage({ bracketData }: { bracketData: unknown }) {
   const groupedRounds = useMemo(() => {
-    const championship = (bracketData as { championships?: Championship[] } | null)?.championships?.[0]
+    const championship = (bracketData as { championships?: Championship[] } | null)
+      ?.championships?.[0]
     const games = championship?.games ?? []
 
     const groups = new Map<number, Game[]>()
@@ -53,7 +54,9 @@ export default function DashboardPage({ bracketData }: { bracketData: unknown })
         round,
         label: ROUND_LABELS[round] ?? `Round ${round}`,
         games: roundGames.sort(
-          (a, b) => (a.bracketPositionId ?? Number.MAX_SAFE_INTEGER) - (b.bracketPositionId ?? Number.MAX_SAFE_INTEGER),
+          (a, b) =>
+            (a.bracketPositionId ?? Number.MAX_SAFE_INTEGER) -
+            (b.bracketPositionId ?? Number.MAX_SAFE_INTEGER)
         ),
       }))
   }, [bracketData])
