@@ -1,0 +1,47 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Build and Deploy to Server
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Execute Deployment Commands on EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            # 1. Clone the repository if it does not exist or pull the latest changes 
+            if [ ! -d "DevSecOps" ]; then
+              git clone https://github.com/HarrisHamid/DevSecOps.git
+            fi
+            cd DevSecOps
+            git pull origin main
+
+            # 2. Build the new docker image for the vite frontend
+            # (Assumes your Dockerfile is in the root or frontend directory. The path can be adjusted if needed)
+            sudo docker build -t march-madness-app .
+
+            # 3. Stop and remove the old container if that container does exists
+            sudo docker stop march-madness-container || true
+            sudo docker rm march-madness-container || true
+
+            # 4. Run the new container and route its logs directly to cloudwatch
+            # Maps EC2 port 80 to your Vite app's port 5173
+            sudo docker run -d \
+              -p 80:5173 \
+              --name march-madness-container \
+              --log-driver=awslogs \
+              --log-opt awslogs-region=us-east-1 \
+              --log-opt awslogs-group=march-madness-docker-logs \
+              march-madness-app
