@@ -193,7 +193,7 @@ export default function App() {
             </button>
           </li>
         </ul>
-        <button className="nav-cta">{user ? 'Log In →' : 'Sign Up →'}</button>
+        <button className="nav-cta">{user ? 'Log Out →' : 'Sign Up →'}</button>
       </nav>
 
       {/* LIVE TICKER */}
@@ -234,23 +234,6 @@ export default function App() {
           </div>
         </div>
         <img src={marchMadnessLogo} alt="March Madness" className="hero-logo" />
-
-        {prismaTestResult ? (
-          <pre
-            style={{
-              marginTop: 12,
-              maxWidth: 720,
-              textAlign: 'left',
-              whiteSpace: 'pre-wrap',
-              wordBreak: 'break-word',
-              background: 'rgba(0,0,0,0.4)',
-              padding: 12,
-              borderRadius: 8,
-            }}
-          >
-            {prismaTestResult}
-          </pre>
-        ) : null}
       </section>
 
       <div className="hero-right">
