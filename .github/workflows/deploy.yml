@@ -17,13 +17,13 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          command_timeout: 30m
+          envs: VITE_SUPABASE_URL,VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY
           script: |
-            # 0. Install dependencies only if missing
-            if ! command -v node &> /dev/null; then
-              sudo yum update -y
-              sudo yum install git nodejs npm -y
-            fi
+            # 0. Install Git and Docker if missing
+            sudo yum update -y
+            sudo yum install git docker -y
+            sudo systemctl start docker
+            sudo systemctl enable docker
 
             # 1. Clone or pull latest code
             if [ ! -d "DevSecOps" ]; then
@@ -32,17 +32,31 @@ jobs:
             cd DevSecOps
             git pull origin main
 
-            # 2. Build the Vite frontend
+            # 2. Write env file before building
             cd frontend
-            npm ci
-            npm run build
+            cat > .env << EOF
+            VITE_SUPABASE_URL=$VITE_SUPABASE_URL
+            VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY=$VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY
+            EOF
 
-            # 3. Deploy built files to the directory nginx is serving
-            sudo rm -rf /var/www/html/marchmadness/dist
-            sudo mkdir -p /var/www/html/marchmadness/dist
-            sudo cp -r dist/. /var/www/html/marchmadness/dist/
+            # 3. Build Docker image
+            sudo docker build -t march-madness-app .
 
-            # 4. Ensure nginx is running
+            # 4. Stop and remove old container
+            sudo docker stop march-madness-container || true
+            sudo docker rm march-madness-container || true
+
+            # 5. Run container on port 3000 (nginx proxies to it)
+            sudo docker run -d \
+              -p 3000:80 \
+              --name march-madness-container \
+              --log-driver=awslogs \
+              --log-opt awslogs-region=us-east-1 \
+              --log-opt awslogs-group=march-madness-docker-logs \
+              --log-opt awslogs-create-group=true \
+              march-madness-app
+
+            # 6. Ensure nginx is running
             sudo systemctl enable nginx
             sudo systemctl start nginx
             sudo systemctl reload nginx
