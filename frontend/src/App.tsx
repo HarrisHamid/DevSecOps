@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
-import { supabase } from './lib/supabase'
-import type { User } from '@supabase/supabase-js'
+// import { useEffect, useState } from 'react'
+// import { supabase } from './lib/supabase'
+// import type { User } from '@supabase/supabase-js'
 import { matchPath, useLocation, useNavigate } from 'react-router-dom'
 import { ncaaApi } from './services/ncaaApi.ts'
 import { useNcaaData } from './hooks/useNcaaData.ts'
@@ -146,17 +146,17 @@ export default function App() {
     { num: '<50ms', label: 'Avg Latency' },
   ]
 
-  const [user, setUser] = useState<User | null>(null)
+  // const [setUser] = useState<User | null>(null)
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => setUser(data.session?.user ?? null))
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null)
-    })
-    return () => subscription.unsubscribe()
-  }, [])
+  // useEffect(() => {
+  //   supabase.auth.getSession().then(({ data }) => setUser(data.session?.user ?? null))
+  //   const {
+  //     data: { subscription },
+  //   } = supabase.auth.onAuthStateChange((_event, session) => {
+  //     setUser(session?.user ?? null)
+  //   })
+  //   return () => subscription.unsubscribe()
+  // }, [])
 
   const teamMatch = matchPath({ path: '/teams/:team', end: true }, location.pathname)
   if (teamMatch?.params?.team) {
