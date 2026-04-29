@@ -193,7 +193,7 @@ export default function App() {
             </button>
           </li>
         </ul>
-        <button className="nav-cta">{user ? 'Log Out →' : 'Sign Up →'}</button>
+        {/* <button className="nav-cta">{user ? 'Log Out →' : 'Sign Up →'}</button> */}
       </nav>
 
       {/* LIVE TICKER */}
