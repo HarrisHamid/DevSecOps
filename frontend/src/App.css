@@ -164,6 +164,12 @@ nav {
 }
 
 /* HERO */
+.hero-logo {
+  max-width: 500px;
+  width: 100%;
+  object-fit: contain;
+}
+
 .hero {
   min-height: 100vh;
   padding-top: 84px;

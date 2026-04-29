@@ -7,6 +7,7 @@ import { useNcaaData } from './hooks/useNcaaData.ts'
 import TeamsPage from './TeamsPage.tsx'
 import DashboardPage from './DashboardPage.tsx'
 import TeamPage from './TeamPage.tsx'
+import marchMadnessLogo from './assets/March_Madness_logo.png'
 import './App.css'
 
 type NcaaNames = {
@@ -62,7 +63,6 @@ type BracketData = {
 export default function App() {
   const location = useLocation()
   const navigate = useNavigate()
-  const [count, setCount] = useState(0)
   const [prismaTestResult, setPrismaTestResult] = useState<string>('')
   const [prismaTestLoading, setPrismaTestLoading] = useState(false)
 
@@ -259,9 +259,7 @@ export default function App() {
             </button>
           </div>
         </div>
-        <button className="counter" onClick={() => setCount((count) => count + 1)}>
-          Count is {count}
-        </button>
+        <img src={marchMadnessLogo} alt="March Madness" className="hero-logo" />
 
         <button className="counter" onClick={testPrismaUsers} disabled={prismaTestLoading}>
           {prismaTestLoading ? 'Testing Prisma…' : 'Test Prisma (users table)'}
