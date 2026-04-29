@@ -10,7 +10,7 @@ export function useNcaaData<T>(fetcher: () => Promise<T>) {
       .then(setData)
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false))
-  }, [])
+  }, [fetcher])
 
   return { data, loading, error }
 }

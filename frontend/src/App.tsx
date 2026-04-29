@@ -209,13 +209,14 @@ export default function App() {
             <a href="#features">Features</a>
           </li>
           <li>
-            <a href="#stats">Stats</a>
+            <button className="nav-link-btn" onClick={() => navigate('/teams')}>
+              Stats
+            </button>
           </li>
           <li>
-            <a href="#bracket">Bracket</a>
-          </li>
-          <li>
-            <a href="#about">About</a>
+            <button className="nav-link-btn" onClick={() => navigate('/dashboard')}>
+              Bracket
+            </button>
           </li>
         </ul>
         <button className="nav-cta">{user ? 'Log In →' : 'Sign Up →'}</button>
@@ -251,7 +252,7 @@ export default function App() {
           </p>
           <div className="hero-actions">
             <button className="btn-primary" onClick={() => navigate('/dashboard')}>
-              View Dashboard →
+              Bracket →
             </button>
             <button className="btn-ghost" onClick={() => navigate('/teams')}>
               Explore Teams
