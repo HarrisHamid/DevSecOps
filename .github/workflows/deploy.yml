@@ -1,15 +1,12 @@
 name: Deploy to EC2
-
 on:
   push:
     branches:
       - main
-
 jobs:
   deploy:
     name: Build and Deploy to Server
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -21,43 +18,28 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            # 0. Install Git and Docker on the new Amazon Linux 2023 server
+            # 0. Ensure dependencies are installed
             sudo yum update -y
-            sudo yum install git docker -y
-            sudo systemctl start docker
-            sudo systemctl enable docker
+            sudo yum install git nodejs npm -y
 
-            # 1. Clone the repository if it doesn't exist, or pull the latest changes
+            # 1. Clone or pull latest code
             if [ ! -d "DevSecOps" ]; then
               git clone https://github.com/HarrisHamid/DevSecOps.git
             fi
             cd DevSecOps
             git pull origin main
 
-            # 2. Move into the frontend folder where the Dockerfile lives
+            # 2. Build the Vite frontend
             cd frontend
+            npm ci
+            npm run build
 
-            # 3. Build the new Docker image for the Vite frontend
-            sudo docker build -t march-madness-app .
+            # 3. Deploy built files to the directory nginx is serving
+            sudo rm -rf /var/www/html/marchmadness/dist
+            sudo mkdir -p /var/www/html/marchmadness/dist
+            sudo cp -r dist/. /var/www/html/marchmadness/dist/
 
-            # 4. Stop and remove the old container if it exists
-            sudo docker stop march-madness-container || true
-            sudo docker rm march-madness-container || true
-
-            # 5. Stop any OTHER containers that may be occupying port 80
-            sudo docker ps -q --filter "publish=80" | xargs -r sudo docker stop
-            sudo docker ps -aq --filter "publish=80" | xargs -r sudo docker rm
-
-            # 6. Stop host-level web servers that may be occupying port 80
-            sudo systemctl stop nginx httpd 2>/dev/null || true
-
-            # 7. Run the new container and route its logs directly to CloudWatch
-            # Note: awslogs-create-group=true ensures it doesn't crash on a fresh server
-            sudo docker run -d \
-              -p 80:80 \
-              --name march-madness-container \
-              --log-driver=awslogs \
-              --log-opt awslogs-region=us-east-1 \
-              --log-opt awslogs-group=march-madness-docker-logs \
-              --log-opt awslogs-create-group=true \
-              march-madness-app
+            # 4. Ensure nginx is running (start it if it was ever stopped)
+            sudo systemctl enable nginx
+            sudo systemctl start nginx
+            sudo systemctl reload nginx
