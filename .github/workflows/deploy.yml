@@ -44,10 +44,17 @@ jobs:
             sudo docker stop march-madness-container || true
             sudo docker rm march-madness-container || true
 
-            # 5. Run the new container and route its logs directly to CloudWatch
+            # 5. Stop any OTHER containers that may be occupying port 80
+            sudo docker ps -q --filter "publish=80" | xargs -r sudo docker stop
+            sudo docker ps -aq --filter "publish=80" | xargs -r sudo docker rm
+
+            # 6. Stop host-level web servers that may be occupying port 80
+            sudo systemctl stop nginx httpd 2>/dev/null || true
+
+            # 7. Run the new container and route its logs directly to CloudWatch
             # Note: awslogs-create-group=true ensures it doesn't crash on a fresh server
             sudo docker run -d \
-              -p 80:5173 \
+              -p 80:80 \
               --name march-madness-container \
               --log-driver=awslogs \
               --log-opt awslogs-region=us-east-1 \
