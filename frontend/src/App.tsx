@@ -63,36 +63,10 @@ type BracketData = {
 export default function App() {
   const location = useLocation()
   const navigate = useNavigate()
-  const [prismaTestResult, setPrismaTestResult] = useState<string>('')
-  const [prismaTestLoading, setPrismaTestLoading] = useState(false)
 
   // NCAA API data
   const { data: scoreboardData } = useNcaaData(ncaaApi.getScoreboard)
   const { data: bracketData } = useNcaaData(ncaaApi.getBracket)
-
-  async function testPrismaUsers() {
-    setPrismaTestLoading(true)
-    setPrismaTestResult('')
-    try {
-      const { data, error } = await supabase
-        .from('users')
-        .upsert({
-          username: 'user123',
-          password: 'password123',
-          email: 'user123@gmail.com',
-        })
-        .select()
-
-      if (error) {
-        throw new Error(error.message)
-      }
-      setPrismaTestResult(JSON.stringify(data))
-    } catch (e) {
-      setPrismaTestResult(e instanceof Error ? e.message : String(e))
-    } finally {
-      setPrismaTestLoading(false)
-    }
-  }
 
   // Build ticker from real API data, fallback to hardcoded if loading
   const fallbackTickerItems = [
@@ -260,10 +234,6 @@ export default function App() {
           </div>
         </div>
         <img src={marchMadnessLogo} alt="March Madness" className="hero-logo" />
-
-        <button className="counter" onClick={testPrismaUsers} disabled={prismaTestLoading}>
-          {prismaTestLoading ? 'Testing Prisma…' : 'Test Prisma (users table)'}
-        </button>
 
         {prismaTestResult ? (
           <pre
