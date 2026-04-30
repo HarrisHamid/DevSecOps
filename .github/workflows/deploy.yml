@@ -1,12 +1,15 @@
 name: Deploy to EC2
+
 on:
   push:
     branches:
       - main
+
 jobs:
   deploy:
     name: Build and Deploy to Server
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -21,7 +24,7 @@ jobs:
           script: |
             # 0. Install Git and Docker if missing
             sudo yum update -y
-            sudo yum install git docker -y
+            sudo yum install -y git docker
             sudo systemctl start docker
             sudo systemctl enable docker
 
@@ -33,21 +36,20 @@ jobs:
             cd DevSecOps
             git pull origin main
 
-            # 2. Write env file before building
+            # 2. Go to frontend
             cd frontend
-            cat > .env << EOF
-            VITE_SUPABASE_URL=$VITE_SUPABASE_URL
-            VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY=$VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY
-            EOF
 
-            # 3. Build Docker image
-            sudo docker build -t march-madness-app .
+            # 3. Build Docker image with env vars
+            sudo docker build \
+              --build-arg VITE_SUPABASE_URL=$VITE_SUPABASE_URL \
+              --build-arg VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY=$VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY \
+              -t march-madness-app .
 
             # 4. Stop and remove old container
             sudo docker stop march-madness-container || true
             sudo docker rm march-madness-container || true
 
-            # 5. Run container on port 3000 (nginx proxies to it)
+            # 5. Run container
             sudo docker run -d \
               -p 3000:80 \
               --name march-madness-container \
@@ -57,7 +59,11 @@ jobs:
               --log-opt awslogs-create-group=true \
               march-madness-app
 
-            # 6. Ensure nginx is running
+            # 6. Restart nginx
             sudo systemctl enable nginx
             sudo systemctl start nginx
             sudo systemctl reload nginx
+
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY }}
